@@ -57,25 +57,19 @@ def collect_data(credentials: HTTPBasicCredentials = Depends(security)):
     logger.log(message)
     return {"status": "measurement collected", "data": data}
 
-# Эндпоинт - чтение лога (заглушка, можно усовершенствовать)
 @app.get("/api/log")
 def get_log(credentials: HTTPBasicCredentials = Depends(security)):
     check_credentials(credentials)
-    # Тут можно реализовать чтение из файла лога
-    # Для примера - отдаём свои данные
     return {"log": ["Лог пример 1", "Лог пример 2"]}
 
-# Эндпоинт - обновление порогов
 @app.post("/api/threshold")
 def set_thresholds(thresholds: dict, credentials: HTTPBasicCredentials = Depends(security)):
     check_credentials(credentials)
-    # Обновляем параметры фильтрации
     filter_mod.TEMP_HIGH = thresholds.get("temp_high", filter_mod.TEMP_HIGH)
     filter_mod.TEMP_LOW = thresholds.get("temp_low", filter_mod.TEMP_LOW)
     filter_mod.HUMIDITY_THRESHOLD = thresholds.get("humidity_threshold", filter_mod.HUMIDITY_THRESHOLD)
     return {"status": "thresholds updated", "thresholds": thresholds}
 
-# Функция запуска сервера uvicorn
 def run_server():
     uvicorn.run("server:app", host="127.0.0.1", port=8080, log_level="info")
 
